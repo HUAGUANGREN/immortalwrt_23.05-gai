@@ -10,10 +10,7 @@
 	model = "Tenbay T-MB5EU-V01";
 
 	aliases {
-		led-boot = &led_green;
-		led-failsafe = &led_red;
-		led-running = &led_blue;
-		led-upgrade = &led_red;
+		
 		label-mac-device = &gmac1;
 	};
 
@@ -22,79 +19,7 @@
 		bootargs-override = "console=ttyS0,115200";
 	};
 
-	leds {
-		compatible = "gpio-leds";
-		pinctrl-names = "default";
-		pinctrl-0 = <&led_pins>;
 
-		led_blue: blue {
-			label = "blue";
-			gpios = <&aw9523 0 GPIO_ACTIVE_LOW>;
-		};
-
-		led_red: red {
-			label = "red";
-			gpios = <&aw9523 1 GPIO_ACTIVE_LOW>;
-		};
-
-		led_green: green {
-			label = "green";
-			gpios = <&aw9523 11 GPIO_ACTIVE_LOW>;
-		};
-	};
-
-	keys {
-		compatible = "gpio-keys-polled";
-		poll-interval = <50>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&button_pins>;
-
-		reset {
-			label = "reset";
-			gpios = <&aw9523 9 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_RESTART>;
-		};
-
-		wps {
-			label = "wps";
-			gpios = <&aw9523 8 GPIO_ACTIVE_LOW>;
-			linux,code = <KEY_WPS_BUTTON>;
-		};
-	};
-
-	i2c-gpio {
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		compatible = "i2c-gpio";
-		gpios = <&gpio 7 GPIO_ACTIVE_HIGH &gpio 8 GPIO_ACTIVE_HIGH>;
-		i2c-gpio,delay-us = <10>;
-
-		aw9523: gpio-expander@5b {
-			compatible = "awinic,aw9523-pinctrl";
-			reg = <0x5b>;
-			gpio-controller;
-			#gpio-cells = <2>;
-			gpio-ranges = <&aw9523 0 0 16>;
-
-			reset-gpios = <&gpio 6 GPIO_ACTIVE_HIGH>;
-
-			button_pins: button-pins {
-				pins = "gpio8", "gpio9";
-				function = "gpio";
-				bias-pull-up;
-				drive-open-drain;
-				input-enable;
-			};
-
-			led_pins: led-pins {
-				pins = "gpio0", "gpio1", "gpio11";
-				function = "gpio";
-				input-disable;
-				output-low;
-			};
-		};
-	};
 };
 
 &pcie {
